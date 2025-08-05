@@ -2,10 +2,10 @@ package harbor
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/harbor"
-	harborclient "gitn.sigma.fr/sigma/paas/api/api/pkg/harbor/client"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/harbor/project"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/harbor"
+	harborclient "github.com/Gskill75/api2/pkg/harbor/client"
+	"github.com/Gskill75/api2/pkg/harbor/project"
 )
 
 type HarborSolution struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
+	"github.com/Gskill75/api2/pkg/config"
 	"k8s.io/klog/v2"
 )
 

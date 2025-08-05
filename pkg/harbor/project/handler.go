@@ -8,8 +8,8 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/goharbor/go-client/pkg/sdk/v2.0/client/project"
 	"github.com/goharbor/go-client/pkg/sdk/v2.0/models"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/harbor"
-	harborclient "gitn.sigma.fr/sigma/paas/api/api/pkg/harbor/client"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/harbor"
+	harborclient "github.com/Gskill75/api2/pkg/harbor/client"
 
 	"k8s.io/klog/v2"
 )

@@ -2,11 +2,11 @@ package dbaas
 
 import (
 	"github.com/gin-gonic/gin"
-	awxclient "gitn.sigma.fr/sigma/paas/api/api/pkg/awx/client"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/postgresql"
-	handler "gitn.sigma.fr/sigma/paas/api/api/pkg/dbaas/handler/postgresql"
-	service "gitn.sigma.fr/sigma/paas/api/api/pkg/dbaas/service/postgresql"
+	awxclient "github.com/Gskill75/api2/pkg/awx/client"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/postgresql"
+	handler "github.com/Gskill75/api2/pkg/dbaas/handler/postgresql"
+	service "github.com/Gskill75/api2/pkg/dbaas/service/postgresql"
 )
 
 type DbaasSolution struct {

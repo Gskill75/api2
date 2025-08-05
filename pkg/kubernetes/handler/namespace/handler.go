@@ -4,10 +4,10 @@ import (
 	"errors"
 
 	"github.com/gin-gonic/gin"
-	apierrors "gitn.sigma.fr/sigma/paas/api/api/pkg/errors"
-	history "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/history"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/service"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/utils"
+	apierrors "github.com/Gskill75/api2/pkg/errors"
+	history "github.com/Gskill75/api2/pkg/kubernetes/history"
+	"github.com/Gskill75/api2/pkg/kubernetes/service"
+	"github.com/Gskill75/api2/pkg/utils"
 	"k8s.io/klog/v2"
 )
 

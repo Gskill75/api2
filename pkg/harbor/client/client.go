@@ -6,8 +6,8 @@ import (
 
 	harbor "github.com/goharbor/go-client/pkg/harbor"
 	"github.com/goharbor/go-client/pkg/sdk/v2.0/client/project"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/harbor"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/harbor"
 	"k8s.io/klog/v2"
 )
 

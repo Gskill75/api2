@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	apierrors "gitn.sigma.fr/sigma/paas/api/api/pkg/errors"
+	apierrors "github.com/Gskill75/api2/pkg/errors"
 )
 
 // APIError helper global pour pousser des erreurs dans le contexte Gin

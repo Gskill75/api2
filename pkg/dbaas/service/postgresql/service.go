@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	awxclient "gitn.sigma.fr/sigma/paas/api/api/pkg/awx/client"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/postgresql"
+	awxclient "github.com/Gskill75/api2/pkg/awx/client"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/postgresql"
 	"k8s.io/klog/v2"
 )
 

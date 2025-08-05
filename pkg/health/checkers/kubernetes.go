@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	k8sclient "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/client"
+	k8sclient "github.com/Gskill75/api2/pkg/kubernetes/client"
 	"k8s.io/klog/v2"
 )
 

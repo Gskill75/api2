@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	apierrors "gitn.sigma.fr/sigma/paas/api/api/pkg/errors"
+	apierrors "github.com/Gskill75/api2/pkg/errors"
 )
 
 func ErrorHandler() gin.HandlerFunc {

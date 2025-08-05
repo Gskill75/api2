@@ -1,4 +1,4 @@
-module gitn.sigma.fr/sigma/paas/api/api
+module github.com/Gskill75/api2
 
 go 1.24.3
 

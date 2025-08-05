@@ -5,12 +5,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/kubernetes"
-	kubeclient "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/client"
-	namespacehandler "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/handler/namespace"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/service"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/utils"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/kubernetes"
+	kubeclient "github.com/Gskill75/api2/pkg/kubernetes/client"
+	namespacehandler "github.com/Gskill75/api2/pkg/kubernetes/handler/namespace"
+	"github.com/Gskill75/api2/pkg/kubernetes/service"
+	"github.com/Gskill75/api2/pkg/utils"
 	"k8s.io/klog/v2"
 )
 

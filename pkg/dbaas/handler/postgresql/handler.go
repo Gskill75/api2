@@ -6,10 +6,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	awxclient "gitn.sigma.fr/sigma/paas/api/api/pkg/awx/client"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/postgresql"
-	service "gitn.sigma.fr/sigma/paas/api/api/pkg/dbaas/service/postgresql"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/utils"
+	awxclient "github.com/Gskill75/api2/pkg/awx/client"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/postgresql"
+	service "github.com/Gskill75/api2/pkg/dbaas/service/postgresql"
+	"github.com/Gskill75/api2/pkg/utils"
 	"k8s.io/klog/v2"
 )
 

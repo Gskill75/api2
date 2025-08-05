@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-	db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/kubernetes"
-	kubeclient "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/client"
-	hellohandler "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/handler/hello"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/service"
+	"github.com/Gskill75/api2/pkg/config"
+	db "github.com/Gskill75/api2/pkg/db/sqlc/kubernetes"
+	kubeclient "github.com/Gskill75/api2/pkg/kubernetes/client"
+	hellohandler "github.com/Gskill75/api2/pkg/kubernetes_v2/handler/hello"
+	"github.com/Gskill75/api2/pkg/kubernetes_v2/service"
 	"k8s.io/klog/v2"
 )
 

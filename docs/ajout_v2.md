@@ -42,7 +42,7 @@ package handler
 
 import (
     "github.com/gin-gonic/gin"
-    "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/service"
+    "github.com/Gskill75/api2/pkg/kubernetes_v2/service"
 )
 // HelloHandler godoc
 // @Summary      Hello world message
@@ -73,11 +73,11 @@ package kubernetes_v2
 import (
     "fmt"
     "github.com/gin-gonic/gin"
-    "gitn.sigma.fr/sigma/paas/api/api/pkg/config"
-    db "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/kubernetes"
-    kubeclient "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/client"
-    hellohandler "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/handler/hello"
-    "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/service"
+    "github.com/Gskill75/api2/pkg/config"
+    db "github.com/Gskill75/api2/pkg/db/sqlc/kubernetes"
+    kubeclient "github.com/Gskill75/api2/pkg/kubernetes/client"
+    hellohandler "github.com/Gskill75/api2/pkg/kubernetes_v2/handler/hello"
+    "github.com/Gskill75/api2/pkg/kubernetes_v2/service"
     "k8s.io/klog/v2"
 )
 
@@ -126,7 +126,7 @@ func (s *KubernetesSolutionV2) Endpoint(rg *gin.RouterGroup) {
 Dans ton fichier main, n’ajoute que :
 
 ```go
-import kubernetesv2 "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2"
+import kubernetesv2 "github.com/Gskill75/api2/pkg/kubernetes_v2"
 // ...
 // k8s v2
 k8sSolV2, err := kubernetesv2.NewKubernetesSolution(cfg, kubeClient, k8sQueries)

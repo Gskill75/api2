@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	kubernetesdb "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/kubernetes"
-	k8sclient "gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes/client"
+	kubernetesdb "github.com/Gskill75/api2/pkg/db/sqlc/kubernetes"
+	k8sclient "github.com/Gskill75/api2/pkg/kubernetes/client"
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

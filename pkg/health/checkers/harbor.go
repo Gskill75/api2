@@ -1,7 +1,7 @@
 package checkers
 
 import (
-	harbor "gitn.sigma.fr/sigma/paas/api/api/pkg/harbor/client"
+	harbor "github.com/Gskill75/api2/pkg/harbor/client"
 )
 
 type HarborChecker struct {

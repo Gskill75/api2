@@ -2,7 +2,7 @@ package hello
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitn.sigma.fr/sigma/paas/api/api/pkg/kubernetes_v2/service"
+	"github.com/Gskill75/api2/pkg/kubernetes_v2/service"
 )
 
 // HelloHandler godoc

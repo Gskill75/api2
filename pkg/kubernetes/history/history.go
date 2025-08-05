@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	kubernetesdb "gitn.sigma.fr/sigma/paas/api/api/pkg/db/sqlc/kubernetes"
+	kubernetesdb "github.com/Gskill75/api2/pkg/db/sqlc/kubernetes"
 )
 
 func LogNamespaceHistory(
