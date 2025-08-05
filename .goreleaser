@@ -1,0 +1,71 @@
+version: 2
+
+builds:
+  - id: api
+    binary: api
+    main: ./cmd/main.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: api
+    format: tar.gz
+    builds:
+      - api
+    name_template: >-
+      {{ .Binary }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else if eq .Arch "386" }}i386{{- else }}{{ .Arch }}{{ end }}{{- if .Arm }}v{{ .Arm }}{{ end }}
+
+dockers:
+  - ids:
+      - api
+    goarch: amd64
+    image_templates:
+      - "{{ .Env.DOCKER_REGISTRY }}/{{ .Env.DOCKER_REGISTRY_NAMESPACE }}/api:{{ .Version }}-amd64"
+    use: buildx
+    dockerfile: ./Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.title=api"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+  - ids:
+      - api
+    goarch: arm64
+    image_templates:
+      - "{{ .Env.DOCKER_REGISTRY }}/{{ .Env.DOCKER_REGISTRY_NAMESPACE }}/api:{{ .Version }}-arm64"
+    use: buildx
+    dockerfile: ./Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.title=api"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+docker_manifests:
+  - name_template: "{{ .Env.DOCKER_REGISTRY }}/{{ .Env.DOCKER_REGISTRY_NAMESPACE }}/api:{{ .Version }}"
+    image_templates:
+      - "{{ .Env.DOCKER_REGISTRY }}/{{ .Env.DOCKER_REGISTRY_NAMESPACE }}/api:{{ .Version }}-amd64"
+      - "{{ .Env.DOCKER_REGISTRY }}/{{ .Env.DOCKER_REGISTRY_NAMESPACE }}/api:{{ .Version }}-arm64"
+
+
+
+
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+gitlab_urls:
+  api: https://gitn.sigma.fr/api/v4/
+  download: https://gitn.sigma.fr
+  use_package_registry: true

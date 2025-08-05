@@ -1,0 +1,432 @@
+basePath: /api
+definitions:
+  handler_postgresql.ProvisionPostgresRequest:
+    properties:
+      customer_id:
+        type: string
+      instance_name:
+        type: string
+      password:
+        type: string
+      template_name:
+        type: string
+      username:
+        type: string
+    required:
+    - template_name
+    type: object
+  namespace.createNSRequest:
+    properties:
+      name:
+        description: min=2 pour éviter "a", sinon min=1
+        maxLength: 63
+        minLength: 2
+        type: string
+    required:
+    - name
+    type: object
+  namespace.deleteNamespaceAdminRequest:
+    properties:
+      customer_id:
+        type: string
+    required:
+    - customer_id
+    type: object
+info:
+  contact: {}
+  description: Generic API for self-service cloud resources
+  title: API Self service for cloud
+  version: "1.0"
+paths:
+  /kubernetes/v1/admin/customer/{customerUniqueId}:
+    get:
+      description: Lists all Kubernetes namespaces belonging to the specified customer.
+        Admin-only endpoint. Requires the user to have role "admin" in their JWT.
+      parameters:
+      - description: Customer unique ID
+        in: path
+        name: customerUniqueId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of namespaces
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Customer ID is required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Only admin can access this resource
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Failed to list namespaces
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: '[Admin] List namespaces for any customer'
+      tags:
+      - admin
+  /kubernetes/v1/admin/namespaces/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a namespace for the specified customer. Requires admin
+        role in the JWT.
+      parameters:
+      - description: Namespace name to delete
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Customer ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/namespace.deleteNamespaceAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Namespace deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Missing or invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Unauthorized - admin role required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Namespace not found for the given customer
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: '[Admin] Delete namespace for any customer'
+      tags:
+      - admin
+  /kubernetes/v1/namespaces:
+    post:
+      consumes:
+      - application/json
+      description: Creates a Kubernetes namespace. The namespace is created under
+        the customer ID associated with the JWT.
+      parameters:
+      - description: Namespace creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/namespace.createNSRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Namespace created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized or missing customer_id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Namespace already exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Create a new Kubernetes namespace
+      tags:
+      - namespaces
+  /kubernetes/v1/namespaces/{name}:
+    delete:
+      description: Deletes a namespace belonging to the current authenticated customer.
+      parameters:
+      - description: Namespace name to delete
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Namespace deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Namespace name is required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Namespace not found for your tenant
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Delete a namespace for the current user
+      tags:
+      - namespaces
+    get:
+      description: Retrieves a namespace only if it belongs to your customer_id (from
+        the JWT).
+      parameters:
+      - description: Namespace name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Namespace details
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Namespace name is required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Forbidden access to namespace
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Namespace not found in database
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get your namespace details
+      tags:
+      - namespaces
+  /kubernetes/v1/namespaces/customer:
+    get:
+      description: Lists all Kubernetes namespaces for the authenticated customer.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of namespaces
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Failed to list namespaces
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: List namespaces by customer
+      tags:
+      - namespaces
+  /kubernetes/v2/hello:
+    get:
+      description: Retourne un "hello world" pour tester l'API v2 Kubernetes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Hello message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Hello world message
+      tags:
+      - kubernetes-v2
+  /postgres/v1/patroni/instance:
+    post:
+      consumes:
+      - application/json
+      description: Provisions a new PostgreSQL instance using AWX automation
+      parameters:
+      - description: instance provisioning request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler_postgresql.ProvisionPostgresRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: instance provisioned successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized or missing customer_id
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Provision a PostgreSQL instance
+      tags:
+      - dbaas - PostgreSQL
+  /postgres/v1/patroni/instance/{job_id}/status:
+    get:
+      consumes:
+      - application/json
+      description: Get the status of a PostgreSQL provisioning job
+      parameters:
+      - description: Job ID
+        in: path
+        name: job_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Job status
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid job ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Job not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get job status
+      tags:
+      - dbaas - PostgreSQL
+  /postgres/v1/patroni/instance/check:
+    get:
+      consumes:
+      - application/json
+      description: Check if customer has an active job for the given template
+      parameters:
+      - description: Template name
+        in: query
+        name: template_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Active job status
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Missing template name
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Check for active jobs
+      tags:
+      - dbaas - PostgreSQL
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

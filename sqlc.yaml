@@ -1,0 +1,35 @@
+version: "2"
+sql:
+# - engine: "postgresql"
+#   queries: "./pkg/db/query"
+#   schema: "./pkg/db/schema"
+#   gen:
+#     go:
+#       package: "db"
+#       out: "./pkg/db/sqlc"
+#       sql_package: "pgx/v5"
+
+  - engine: "postgresql"
+    schema: "./pkg/db/kubernetes/schema"
+    queries: "./pkg/db/kubernetes/query"
+    gen:
+      go:
+        package: "kubernetesdb"
+        out: "./pkg/db/sqlc/kubernetes"
+        sql_package: "pgx/v5"
+  - engine: "postgresql"
+    schema: "./pkg/db/harbor/schema"
+    queries: "./pkg/db/harbor/query"
+    gen:
+      go:
+        package: "harbordb"
+        out: "./pkg/db/sqlc/harbor"
+        sql_package: "pgx/v5"
+  - engine: "postgresql"
+    schema: "./pkg/db/dbaas/schema"
+    queries: "./pkg/db/dbaas/query"
+    gen:
+      go:
+        package: "postgresdb"
+        out: "./pkg/db/sqlc/postgresql"
+        sql_package: "pgx/v5"

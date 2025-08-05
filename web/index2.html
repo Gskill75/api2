@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>✨ Self-Service Cloud — Dashboard Multi-API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(115deg,#e5edf3 0,#c3d8ec 70%,#fff 100%);
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #002d5a;
+    }
+    .dashboard {
+      max-width: 1240px;
+      margin: 2em auto;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 7px 40px #002d5a15;
+      padding: 2.8em 2.5% 2.2em 2.5%;
+      position: relative;
+    }
+    h1,h2,h3,h4 {
+      color: #002d5a;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: bold;
+      letter-spacing: .9px;
+    }
+    h1 { font-size:2.3em; text-align:center; margin:0 0 1.2em; }
+    .cards {
+      display:flex; flex-wrap:wrap; gap:3.1em 2.3em;
+      justify-content:flex-start; align-items:stretch; margin-bottom:2.5em;
+    }
+    .card-section {
+      background:#f7fafc; border-radius:18px; box-shadow:0 2px 18px #308ac42a;
+      border:1.5px solid #d6e6f5; transition:box-shadow .18s, transform .18s;
+      padding:2.2em 2.2em 1.55em; min-width:320px; max-width:410px; flex:1 1 340px;
+      display:flex; flex-direction:column; justify-content:flex-start;
+    }
+    .card-section:hover { box-shadow:0 12px 36px #308ac448; transform:translateY(-7px) scale(1.012); }
+    .card-section h2 {
+      font-weight:800; margin:0 0 1.3em; color:#308ac4;
+      font-size:1.17em; letter-spacing:.03em;
+    }
+    label { display:block; font-weight:600; margin:1em 0 .4em; color:#1b436f; }
+    input,select {
+      width:100%; padding:8px 13px; margin-bottom:1.15em;
+      border-radius:9px; border:1.4px solid #bfd8ea; background:#fff;
+      font-size:1.02em; font-family:inherit; color:#102c49; transition:border .14s;
+      box-shadow:0 .5px 3px #002d5a08;
+    }
+    input:focus,select:focus { outline:none; border-color:#308ac4; background:#f2faff; }
+    button {
+      font-size:1.04em; padding:.63em 1.32em;
+      background:linear-gradient(90deg,#308ac4 10%,#5ecced 100%);
+      color:#fff; border:none; border-radius:10px; font-family:'Montserrat';
+      font-weight:700; cursor:pointer; box-shadow:0 1px 11px #a5cde4;
+      transition:box-shadow .17s, background .13s, transform .11s;
+      display:flex; align-items:center; gap:10px; margin-top:.6em;
+    }
+    button:hover,button:focus {
+      background:linear-gradient(92deg,#002d5a 0%,#308ac4 100%);
+      box-shadow:0 13px 32px #308ac43d; transform:scale(1.03);
+    }
+    .form-row { display:flex; flex-wrap:wrap; gap:1.25em; margin-bottom:.25em; }
+    .form-row .form-group { flex:1 1 250px; min-width:185px; }
+    .waouh-divider {
+      border:none; border-top:2px solid #bfd8ea; width:82%; margin:2.3em auto; opacity:.65;
+    }
+    .result,.notification {
+      background:linear-gradient(105deg,#eaf6fc 60%,#eef9ff 100%);
+      margin:1.25em 0 0; padding:1.16em;
+      border-radius:11px; font-size:1.06em; box-shadow:0 .5px 4px #1a88cb09;
+      border:1px solid #bfd8ea; color:#242f3f; line-height:1.56;
+    }
+    .notification {
+      position:fixed; top:18px; left:50vw; transform:translateX(-50%);
+      z-index:999; min-width:250px; max-width:480px;
+      animation:fadeinout 2.8s linear; background:#5eccedee; color:#fff; font-weight:bold;
+      border-left:5px solid #308ac4;
+    }
+    @keyframes fadeinout {
+      0%{opacity:0;top:60px;} 15%{opacity:1;} 85%{opacity:1;}100%{opacity:0;top:0;}
+    }
+    .success { border-left:4px solid #6fbe44!important; }
+    .error   { border-left:4px solid #e0504f!important; }
+    .nscard-group {
+      display:flex; flex-direction:column; gap:1.17em;
+      margin:1.2em 0 0; max-height:460px; overflow-y:auto; padding-right:.6em;
+    }
+    .nscard {
+      background:linear-gradient(100deg,#eaf6fc 70%,#f8fdff 100%);
+      border:1.4px solid #bfd8ea; border-radius:12px;
+      box-shadow:0 3px 12px #308ac418; padding:1.16em; word-break:break-word;
+      font-size:1.05em; color:#092e56;
+    }
+    .nscard:hover { box-shadow:0 10px 28px #308ac43e; border-color:#308ac4c8; }
+    .nsline { margin:.13em 0; display:flex; align-items:baseline; }
+    .nskey  { font-weight:bold; min-width:99px; color:#308ac4; }
+    .nsval  { margin-left:7px; color:#002d5a; }
+    .nsdate { color:#62aede; }
+    .nsmess { color:#6fbe44; font-weight:bold; }
+    .nscard.nserror {
+      border-left:6px solid #e0504f; background:#fff7f7; color:#e0504f;
+    }
+    .nscard.nserror .nskey,
+    .nscard.nserror .nsval { color:#e0504f; font-weight:bold; }
+
+    @media(max-width:1200px){
+      .dashboard{max-width:98vw;} .cards{gap:2em;}
+      .card-section{min-width:98vw;max-width:98vw;}
+    }
+    @media(max-width:800px){
+      .cards{flex-direction:column;gap:2.3em;} .dashboard{padding:1.3em;}
+      .card-section{min-width:97vw;max-width:100vw;}
+      .nscard-group{max-height:380px;} h1{font-size:1.22em;}
+      .form-row{flex-direction:column;}
+    }
+    @media(max-width:480px){
+      .dashboard{padding:.7em;} .card-section{padding:1.2em .6em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h1><i class="fa-solid fa-cloud"></i> Cloud Self-Service Portal</h1>
+    <div class="top-bar">
+      <button type="button" onclick="askToken()" style="font-size:.95em;">
+        <i class="fa-solid fa-key"></i> Saisir/Changer le token API
+      </button>
+      <span id="currentTokenInfo">(aucun token)</span>
+    </div>
+    <div id="notif"></div>
+    <div class="cards">
+
+      <!-- PostgreSQL Provisioning -->
+      <div class="card-section">
+        <h2><i class="fa-solid fa-database"></i> PostgreSQL Provisioning</h2>
+        <form id="pgProvisionForm">
+          <label>Template Name <span style="color:#fc2947">*</span></label>
+          <select id="pg_template" required>
+            <option value="">Sélectionner un template…</option>
+            <option value="print_hostname">print_hostname</option>
+            <option value="Demo Job Template">Demo Job Template</option>
+          </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Instance Name</label>
+              <input id="pg_instance" type="text" placeholder="my-postgres-db">
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input id="pg_user" type="text">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input id="pg_pass" type="password">
+            </div>
+          </div>
+          <button type="submit"><i class="fa-solid fa-rocket"></i> Lancer Provision</button>
+        </form>
+        <div id="pgProvisionMsg"></div>
+        <hr class="waouh-divider">
+        <div class="form-row">
+          <select id="pg_check_template" style="flex:1">
+            <option value="">Sélectionner un template…</option>
+            <option value="print_hostname">print_hostname</option>
+            <option value="Demo Job Template">Demo Job Template</option>
+          </select>
+          <button onclick="checkPGActiveJob()" style="min-width:160px">
+            <i class="fa fa-search"></i> Voir job actif
+          </button>
+        </div>
+        <div id="pgJobCheckMsg"></div>
+        <br>
+        <div class="form-row">
+          <input id="pg_jobid" type="number" placeholder="job id à surveiller">
+          <button onclick="checkPGJobStatus()" style="min-width:150px">
+            <i class="fa-regular fa-eye"></i> Vérifier status
+          </button>
+        </div>
+        <div id="pgJobStatusResult"></div>
+      </div>
+
+      <!-- USER namespaces -->
+      <div class="card-section">
+        <h2><i class="fa-solid fa-cubes"></i> Mes namespaces K8S</h2>
+        <button onclick="listUserNamespaces()"><i class="fa fa-list"></i> Lister tous mes namespaces</button>
+        <div id="k8sUserNSResult"></div>
+        <hr class="waouh-divider">
+        <form id="createUserNSForm">
+          <label>Créer un nouveau namespace</label>
+          <div class="form-row">
+            <input type="text" id="userNSName" placeholder="Nom (min 2 lettres)" minlength="2" maxlength="63" required>
+            <button type="submit"><i class="fa-solid fa-plus"></i> Créer</button>
+          </div>
+        </form>
+        <div id="createUserNsMsg"></div>
+        <form onsubmit="event.preventDefault(); deleteUserNamespace();" style="margin-top:1.1em;">
+          <label>Supprimer un namespace</label>
+          <div class="form-row">
+            <input type="text" id="userNSDeleteName" placeholder="Nom namespace">
+            <button type="submit"><i class="fa-regular fa-trash-can"></i> Supprimer</button>
+          </div>
+        </form>
+        <div id="deleteUserNSMsg"></div>
+        <form onsubmit="event.preventDefault(); getUserNamespace();" style="margin-top:1.1em;">
+          <label>Afficher détails d'un namespace</label>
+          <div class="form-row">
+            <input type="text" id="userNSShowName" placeholder="Nom du namespace">
+            <button type="submit"><i class="fa-solid fa-search"></i> Afficher</button>
+          </div>
+        </form>
+        <div id="showUserNSMsg"></div>
+      </div>
+
+      <!-- ADMIN namespaces -->
+      <div class="card-section">
+        <h2><i class="fa-solid fa-user-shield"></i> Admin: Namespaces</h2>
+
+        <!-- Lister -->
+        <form id="adminListNSForm">
+          <label>Pour un customerUniqueId</label>
+          <div class="form-row">
+            <input type="text" id="admin_customer_id" placeholder="customerUniqueId" required>
+            <button type="submit"><i class="fa fa-table-list"></i> Lister</button>
+          </div>
+        </form>
+        <div id="adminListNSResult"></div>
+
+        <hr class="waouh-divider">
+
+        <!-- Supprimer -->
+        <form id="adminDeleteNSForm">
+          <label>Suppression admin (namespace + customerId)</label>
+          <div class="form-row">
+            <input type="text" id="adminDelNSName" placeholder="Nom namespace" required>
+            <input type="text" id="adminDelNSCustomer" placeholder="customer_id" required>
+            <button type="submit"><i class="fa-regular fa-trash-can"></i> Supprimer</button>
+          </div>
+        </form>
+        <div id="adminDeleteNSResult"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_HOST = "http://localhost:8080";
+    let AUTH_TOKEN = "";
+    let notifTimeout = null;
+
+    // Token
+    function askToken() {
+      let init = AUTH_TOKEN ? " (actuel : ..."+AUTH_TOKEN.slice(-8)+")" : "";
+      let t = prompt("Colle ton token d'API ici"+init+" :", AUTH_TOKEN);
+      if (t !== null) {
+        AUTH_TOKEN = t.trim();
+        sessionStorage.setItem('api_token', AUTH_TOKEN);
+        displayCurrentToken();
+      }
+    }
+    function displayCurrentToken() {
+      const el = document.getElementById("currentTokenInfo");
+      el.innerHTML = AUTH_TOKEN
+        ? "(token : <span style='color:#505099'>..."+AUTH_TOKEN.slice(-8)+"</span>)"
+        : "(aucun token)";
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      if (sessionStorage.getItem('api_token')) {
+        AUTH_TOKEN = sessionStorage.getItem('api_token');
+      }
+      displayCurrentToken();
+    });
+
+    // Notifications & résultats
+    function notify(html, type="notification", duration=2500) {
+      const el = document.getElementById("notif");
+      el.innerHTML = html ? `<div class="${type}">${html}</div>` : "";
+      if (notifTimeout) clearTimeout(notifTimeout);
+      if (html) {
+        notifTimeout = setTimeout(() => el.innerHTML="", duration);
+      }
+    }
+    function setResult(container, out, type="result") {
+      const el = typeof container==="string" ? document.getElementById(container) : container;
+      if (!out) {
+        el.innerHTML = "";
+      } else if (typeof out==="object") {
+        el.innerHTML = `<div class="${type}">${prettyJson(JSON.stringify(out))}</pre></div>`;
+      } else {
+        el.innerHTML = `<div class="${type}">${out}</div>`;
+      }
+      if (type==="result" && out) {
+        el.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    }
+    function prettyJson(str) {
+      try {
+        const obj = JSON.parse(str);
+        return `<pre style="margin:0;font-size:1em;">${JSON.stringify(obj, null, 2)}</pre>`;
+      } catch {
+        return str;
+      }
+    }
+
+    // Rendu namespace
+    function formatDate(dt) {
+      if (!dt) return "";
+      const d = new Date(dt);
+      return isNaN(d) ? dt
+        : `${d.getDate().toString().padStart(2,'0')}/`+
+          `${(d.getMonth()+1).toString().padStart(2,'0')}/`+
+          `${d.getFullYear()} `+
+          `${d.getHours().toString().padStart(2,'0')}:`+
+          `${d.getMinutes().toString().padStart(2,'0')}`;
+    }
+    function renderNamespaceCard(ns) {
+      return `
+        <div class="nscard">
+          <div class="nsline"><span class="nskey"><i class="fa-solid fa-sitemap"></i> Nom :</span><span class="nsval">${ns.name||"-"}</span></div>
+          <div class="nsline"><span class="nskey">Client ID :</span><span class="nsval">${ns.customer_id||"-"}</span></div>
+          <div class="nsline"><span class="nskey">Créé par :</span><span class="nsval">${ns.created_by||"-"}</span></div>
+          <div class="nsline"><span class="nskey">Date :</span><span class="nsval nsdate">${formatDate(ns.created_at||ns.timestamp)}</span></div>
+          ${ns.updated_at?`<div class="nsline"><span class="nskey">Maj le :</span><span class="nsval nsdate">${formatDate(ns.updated_at)}</span></div>`:""}
+          ${ns.message?`<div class="nsline"><span class="nskey">Message :</span><span class="nsval nsmess">${ns.message}</span></div>`:""}
+          ${ns.request_id?`<div class="nsline"><span class="nskey">Request ID :</span><span class="nsval">${ns.request_id}</span></div>`:""}
+        </div>`;
+    }
+    function renderNamespaceError(errObj) {
+      return `
+        <div class="nscard nserror">
+          <div class="nsline"><span class="nskey"><i class="fa-solid fa-circle-xmark"></i> Erreur :</span><span class="nsval">${errObj.error}</span></div>
+          ${errObj.request_id?`<div class="nsline"><span class="nskey">Request ID :</span><span class="nsval">${errObj.request_id}</span></div>`:""}
+          ${errObj.timestamp?`<div class="nsline"><span class="nskey">Horodatage :</span><span class="nsval">${formatDate(errObj.timestamp)}</span></div>`:""}
+        </div>`;
+    }
+
+    // PostgreSQL handlers (inchangés)...
+
+    document.getElementById("pgProvisionForm").onsubmit = async function(e) {
+      e.preventDefault();
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      setResult("pgProvisionMsg","");
+      const body = {
+        template_name: document.getElementById("pg_template").value,
+        instance_name: document.getElementById("pg_instance").value,
+        username: document.getElementById("pg_user").value,
+        password: document.getElementById("pg_pass").value
+      };
+      if (!body.template_name) return notify("Template name requis !","notification error");
+      try {
+        const r = await fetch(`${API_HOST}/api/postgres/v1/patroni/instance`, {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${AUTH_TOKEN}`
+          },
+          body: JSON.stringify(body)
+        });
+        const out = await r.json();
+        setResult("pgProvisionMsg", out);
+        notify("Instance demandée ✔️");
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    };
+
+    async function checkPGActiveJob() {
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const template = document.getElementById("pg_check_template").value;
+      if (!template) return notify("Template name à checker requis","notification error");
+      try {
+        const r = await fetch(`${API_HOST}/api/postgres/v1/patroni/instance/check?template_name=${encodeURIComponent(template)}`, {
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await r.json();
+        setResult("pgJobCheckMsg", out);
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    }
+
+    async function checkPGJobStatus() {
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const jobid = document.getElementById("pg_jobid").value.trim();
+      if (!jobid) return notify("Entrez un job id.","notification error");
+      try {
+        const r = await fetch(`${API_HOST}/api/postgres/v1/patroni/instance/${jobid}/status`, {
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await r.json();
+        setResult("pgJobStatusResult", out);
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    }
+
+    // USER namespace handlers (inchangés)...
+
+    document.getElementById("createUserNSForm").onsubmit = async function(e) {
+      e.preventDefault();
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const ns = document.getElementById("userNSName").value.trim();
+      if (ns.length < 2) return notify("Min 2 caractères requis.","notification error");
+      try {
+        const r = await fetch(`${API_HOST}/api/kubernetes/v1/namespaces`, {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${AUTH_TOKEN}`
+          },
+          body: JSON.stringify({ name: ns })
+        });
+        const out = await r.json();
+        document.getElementById("createUserNsMsg").innerHTML = (out.name)
+          ? renderNamespaceCard(out)
+          : (out.error?renderNamespaceError(out):prettyJson(JSON.stringify(out)));
+        notify("Namespace créé.");
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    };
+
+    async function listUserNamespaces() {
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const container = document.getElementById("k8sUserNSResult");
+      notify("");
+      container.innerHTML = "Chargement des namespaces…";
+      try {
+        const res = await fetch(`${API_HOST}/api/kubernetes/v1/namespaces/customer`, {
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await res.json();
+        if (!out.namespaces?.length) {
+          container.innerHTML = "<i style='color:#777'>Aucun namespace pour ce client.</i>";
+          notify("Aucun namespace trouvé.");
+          return;
+        }
+        container.innerHTML = `
+          <div class="nscard-group">
+            ${out.namespaces.map(renderNamespaceCard).join('')}
+          </div>
+          <div style="margin:.7em 0 0;"><b>Total :</b> ${out.count||out.namespaces.length} namespaces</div>
+        `;
+        notify(`${out.count||out.namespaces.length} namespace(s) récupéré(s) ✔️`);
+      } catch(e) {
+        container.innerHTML = `<div class="notification">Erreur : ${e.message}</div>`;
+        notify("Erreur API: impossible de récupérer les namespaces","notification error");
+      }
+    }
+
+    async function deleteUserNamespace() {
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const ns = document.getElementById("userNSDeleteName").value.trim();
+      if (!ns) return notify("Nom du ns requis.","notification error");
+      try {
+        const r = await fetch(`${API_HOST}/api/kubernetes/v1/namespaces/${encodeURIComponent(ns)}`, {
+          method:"DELETE",
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await r.json();
+        document.getElementById("deleteUserNSMsg").innerHTML = (out.name)
+          ? renderNamespaceCard(out)
+          : (out.error?renderNamespaceError(out):prettyJson(JSON.stringify(out)));
+        notify("Namespace supprimé.");
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    }
+
+    async function getUserNamespace() {
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const ns = document.getElementById("userNSShowName").value.trim();
+      if (!ns) return notify("Nom requis.","notification error");
+      try {
+        const res = await fetch(`${API_HOST}/api/kubernetes/v1/namespaces/${encodeURIComponent(ns)}`, {
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await res.json();
+        document.getElementById("showUserNSMsg").innerHTML = (out.name)
+          ? renderNamespaceCard(out)
+          : (out.error?renderNamespaceError(out):prettyJson(JSON.stringify(out)));
+      } catch(e) {
+        notify(e.message,"notification error");
+      }
+    }
+
+    // ADMIN namespace handlers (nouveaux & homogènes)
+
+    document.getElementById("adminListNSForm").onsubmit = async function(e) {
+      e.preventDefault();
+      if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+      const cid = document.getElementById("admin_customer_id").value.trim();
+      if (!cid) return notify("customerUniqueId requis.","notification error");
+      const container = document.getElementById("adminListNSResult");
+      container.innerHTML = "Chargement des namespaces…";
+      try {
+        const res = await fetch(`${API_HOST}/api/kubernetes/v1/admin/customer/${encodeURIComponent(cid)}`, {
+          headers:{ "Authorization":`Bearer ${AUTH_TOKEN}` }
+        });
+        const out = await res.json();
+        if (out.namespaces?.length) {
+          container.innerHTML = `
+            <div class="nscard-group">
+              ${out.namespaces.map(renderNamespaceCard).join('')}
+            </div>
+            <div style="margin:.7em 0;"><b>Total :</b> ${out.namespaces.length} namespaces</div>
+          `;
+        } else {
+          container.innerHTML = "<i style='color:#777'>Aucun namespace trouvé pour ce customer.</i>";
+        }
+        notify(`Résultat client : ${cid}`);
+      } catch(e) {
+        container.innerHTML = renderNamespaceError({ error: e.message });
+        notify("Erreur API: impossible de récupérer les namespaces","notification error");
+      }
+    };
+
+document.getElementById("adminDeleteNSForm").onsubmit = async function(e) {
+  e.preventDefault();
+  if (!AUTH_TOKEN) return notify("Renseigne d'abord le token API.","notification error");
+
+  const name = document.getElementById("adminDelNSName").value.trim();
+  const cid  = document.getElementById("adminDelNSCustomer").value.trim();
+  if (!name || !cid) return notify("Champs requis.","notification error");
+
+  const container = document.getElementById("adminDeleteNSResult");
+  container.innerHTML = "";
+
+  try {
+    const r = await fetch(
+      `${API_HOST}/api/kubernetes/v1/admin/namespaces/${encodeURIComponent(name)}`, 
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${AUTH_TOKEN}`
+        },
+        body: JSON.stringify({ customer_id: cid })
+      }
+    );
+    const out = await r.json();
+
+    // Traitement unifié des erreurs JSON
+    if (out.error) {
+      container.innerHTML = renderNamespaceError(out);
+    } else {
+      setResult(container, out);
+      notify("Namespace supprimé (admin).");
+    }
+
+  } catch (e) {
+    // Exception réseau ou parsing
+    container.innerHTML = renderNamespaceError({ error: e.message });
+    notify(e.message, "notification error");
+  }
+};
+  </script>
+</body>
+</html>

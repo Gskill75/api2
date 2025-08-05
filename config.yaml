@@ -1,0 +1,22 @@
+db:
+  host: "localhost"
+  port: 5432
+  user: "usr_api"
+  password: "iop"
+  dbname: "test2"
+  sslmode: "disable"
+awx:
+  url: "http://192.168.1.21:8081/api/"
+  username: "admin"
+  password: "z"
+  insecure: "true"
+kubernetes:
+  url: "https://k8s-tess.fr:6443"
+  token: "UE"
+harbor:
+  url: "https://registry.fr"
+  username: "admin"
+  token: "ss"
+oidc:
+  issuer: "https://auth-api-test.apps..fr/auth/realms/test-api"
+  audience: "api"
